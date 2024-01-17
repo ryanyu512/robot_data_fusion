@@ -1,6 +1,6 @@
 ![demo](https://github.com/ryanyu512/robot_data_fusion/assets/19774686/09c50440-0cb3-40f3-a320-d8c44a662a58)
 
-This project explores extended kalman filter to fuse noisy information from GPS, gyroscope and lidar to track the true state (x, y, heading and forward velocity) of 2D vehicle.
+This project explores extended kalman filter to fuse noisy information from GPS, gyroscope and lidar to track the true state (x, y, heading and forward velocity) of 2D vehicle. In the above demo, "+" indicates noisy GPS while sq shape represents beacon location scanned by lidar. 
 
 1. demo.py: used for testing different parameters of kalman filter
 2. sensor.py: define the properties of different sensors
