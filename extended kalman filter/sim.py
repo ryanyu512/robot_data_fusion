@@ -5,6 +5,7 @@ from sensor import *
 from ekf import *
 
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
 
 def sim(dt, 
@@ -21,7 +22,9 @@ def sim(dt,
         lidar,
         beacon_num, 
         area_h = 400,
-        area_w = 400
+        area_w = 400,
+        is_animate = True,
+        is_save_gif = False,
 ):
 
     #initialise simulation step
@@ -219,6 +222,15 @@ def sim(dt,
                 D = np.matmul(np.matmul(U,np.diag(3.0*np.sqrt(S))),theta_mat)
                 ax2.plot([x+est_state_hist[i][0,0] for x in D[0]], [y+est_state_hist[i][1,0] for y in D[1]], 'g-')
 
+        ax2.legend(['true robot', 'estimated robot'])
+
+        #plot heading
+        ax2.plot([true_state_hist[i][0,0], true_state_hist[i][0,0] + 2*np.cos(true_state_hist[i][2,0])], 
+                [true_state_hist[i][1,0], true_state_hist[i][1,0] + 2*np.sin(true_state_hist[i][2,0])], '-g')
+        if est_state_hist[i] is not None:
+            ax2.plot([est_state_hist[i][0,0], est_state_hist[i][0,0] + 2*np.cos(est_state_hist[i][2,0])], 
+                    [est_state_hist[i][1,0], est_state_hist[i][1,0] + 2*np.sin(est_state_hist[i][2,0])], '-r')
+            
         #plot gps history
         gps_data = np.array([m for m in gps_history[0:i+1] if m is not None])
         if gps_data is not None and len(gps_data) > 0:
@@ -237,6 +249,11 @@ def sim(dt,
 
         ax2.set_xlim([true_state_hist[i][0, 0] - 20., true_state_hist[i][0, 0] + 20.])
         ax2.set_ylim([true_state_hist[i][1, 0] - 20., true_state_hist[i][1, 0] + 20.])
+        plt.xlabel('x position (m)')
+        plt.ylabel('y position (m)')
+
+        #ax2.relim()
+        #ax2.autoscale_view()
 
     anim = FuncAnimation(fig2, 
                         update_plot,
@@ -245,4 +262,12 @@ def sim(dt,
                         interval = 1,
                         repeat = False)
 
-    plt.show()
+    if is_animate:
+        plt.show()
+
+    if is_save_gif:
+        writer = animation.PillowWriter(fps=15,
+                                        metadata=dict(artist='Me'),
+                                        bitrate=1800)
+        anim.save('demo.gif', writer=writer)
+

@@ -2,7 +2,7 @@ from sim import *
 
 #initialise time setting
 dt = 0.01
-end_t = 200
+end_t = 30
 
 #initialise state
 init_speed = 2
@@ -22,7 +22,7 @@ gyro_std = np.deg2rad(0.01)
 gps_pos_std = 3.
 
 #initialise beacon number
-beacon_num = 1500
+beacon_num = 100
 
 #initialise gps sensor
 gps = gps_sensor()
@@ -42,4 +42,8 @@ sim(dt,
     gyro_std,
     gps,
     lidar,
-    beacon_num, )
+    beacon_num, 
+    area_h = 100,
+    area_w = 100, 
+    is_animate = False,
+    is_save_gif = True)
